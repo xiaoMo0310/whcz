@@ -1,0 +1,121 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.jdbc.whc.dao.IStutasDao">
+	
+	<resultMap type="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling" id="enshrines">
+		<result property="staffCode" column="staffCode" />
+		<result property="ReadingFeeling" column="ReadingFeeling"/>
+		<result property="staffName" column="姓名" />
+		<result property="date" column="clockDate" />
+		<result property="clockBook" column="clockBook" />
+		<result property="stutas" column="stutas" />
+	</resultMap>
+	
+	<!-- 插入点赞信息 -->
+	<insert id="addPraise" useGeneratedKeys="true" keyProperty="id"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		insert into praise(staffCode,praiseID,praise,content,Be_praised_code,createTime) 
+		values(#{staffCode},#{id},#{praise},#{clockDirectory},#{staffCoded},now())
+	</insert>
+	<!-- 删除点赞信息 -->
+	<delete id="deletePraise"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		delete from praise where praiseID=#{id} and staffCode=#{staffCode}
+	</delete>
+	<!-- 查询超赞信息是否存在-->
+	<select id="selectPraise"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling" resultType="int">
+		select praiseID from praise where staffCode=#{staffCode}
+	</select>
+	<!-- 查询超赞数量-->
+	<select id="selectFabulousNum"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling" resultType="int">
+		select count(1) from fabulous where staffCode=#{staffCode} and left(createTime,10)=CURDATE()
+	</select>
+	<!-- 插入超赞信息 -->
+	<insert id="addFabulous"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		insert into fabulous(staffCode,fabulousID,fabulous,content,Be_fabuloused_code,createTime) 
+		values(#{staffCode},#{id},#{fabulous},#{clockDirectory},#{staffCoded},now())
+	</insert>
+	<!-- 删除超赞信息 -->
+	<delete id="deleteFabulous"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		delete from fabulous where fabulousID=#{id} and staffCode=#{staffCode}
+	</delete>
+	<!-- 查询超赞信息是否存在-->
+	<select id="selectFabulous"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling" resultType="int">
+		select fabulousID from fabulous where staffCode=#{staffCode}
+	</select>
+	
+	<!-- 插入收藏信息 -->
+	<insert id="addEnshrine"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		insert into myenshrine(staffCode,enshrineID,enshrine,content,Be_enshrine_code,createTime) 
+		values(#{staffCode},#{id},#{enshrine},#{clockDirectory},#{staffCoded},now())
+	</insert>
+	<!-- 查询收藏信息单个收藏信息是否存在-->
+	<select id="selectEnshrine"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling" resultType="int">
+		select enshrineID from myenshrine where staffCode=#{staffCode}
+	</select>
+	<!-- 删除收藏信息 -->
+	<delete id="deleteEnshrine"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		delete from myenshrine where enshrineID=#{id} and staffCode=#{staffCode}
+	</delete>
+	<!-- 根据id删除收藏信息 -->
+	<delete id="deleteEnshrineById"  parameterType="com.atguigu.jdbc.whc.po.NewLoginBean.ListAllFeeling">
+		delete from myenshrine where id=#{id}
+	</delete>
+	
+	<!-- 查询收藏的全部信息 -->
+	<select id="selectEnshrines" resultMap="enshrines">
+		select m.staffCode,m.id,r.ReadingFeeling,d.姓名,rd.clockDirectory,r.clockDate,b.clockBook from myenshrine m 
+		INNER JOIN reading_plancontent r on m.enshrineID=r.id 
+		INNER JOIN reading_detail rd on rd.id=r.ChapterId
+		INNER JOIN books b on rd.BookId=b.id
+		INNER JOIN datacenter_personnel d on r.staffCode=d.人员编码
+		where m.staffCode=#{staffCode} order by r.clockDate desc
+	</select>
+	
+	
+	<insert id="insertLike" useGeneratedKeys="true" keyProperty="id" >
+	 INSERT into flow_info (typeName,infoTitle,infoContent,infoCurrentTime,infoSendStaffCode) 
+     VALUEs ('个人信息','点赞',#{clockDirectory},NOW(),#{staffCode})
+	</insert>
+	
+	<insert id="insertLikeAccept">
+	  INSERT INTO flow_info_accept(infoId,infoAcceptName,createTime) VALUES (#{id},#{staffCoded},now())
+	</insert>
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	<insert id="insertFabulousInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into flow_info(typeName,infoTitle,infoContent,infoCurrentTime,infoSendStaffCode)
+		values('个人信息','超赞',#{clockDirectory},now(),#{staffCode})
+	</insert>
+	<insert id="insertFabulousInfoAccpet">
+		insert into flow_info_accept(infoId,infoAcceptName,createTime)
+		values(#{id},#{staffCoded},now())
+	</insert>
+	
+	<insert id="insertEnshrineInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into flow_info(typeName,infoTitle,infoContent,infoCurrentTime,infoSendStaffCode)
+		values('个人信息','收藏',#{clockDirectory},now(),#{staffCode})
+	</insert>
+	<insert id="insertEnshrineInfoAccpet">
+		insert into flow_info_accept(infoId,infoAcceptName,createTime)
+		values(#{id},#{staffCoded},now())
+	</insert>
+
+
+
+	
+
+
+</mapper>
+
+
+
+
+
